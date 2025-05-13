@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Suite</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            background: linear-gradient(45deg, #99af79, #af548f, #03dac6, #c16ab4);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+            color: #ffffff;
+            overflow-y: auto; /* Allow vertical scrolling */
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(30, 30, 30, 0.9); /* Semi-transparent background for better readability */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #6200ea;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .music-toggle:hover {
+            background-color: #3700b3;
+            transform: scale(1.1);
+        }
+
+        .music-toggle input {
+            display: none;
+        }
+
+        .music-toggle-label {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .music-toggle-label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .music-toggle input:checked + .music-toggle-label {
+            background-color: #03dac6;
+        }
+
+        .music-toggle input:checked + .music-toggle-label::after {
+            transform: translateX(20px);
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .emoji:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .emoji:nth-child(2) {
+            left: 30%;
+            animation-delay: 1s;
+        }
+
+        .emoji:nth-child(3) {
+            left: 50%;
+            animation-delay: 2s;
+        }
+
+        .emoji:nth-child(4) {
+            left: 70%;
+            animation-delay: 3s;
+        }
+
+        .emoji:nth-child(5) {
+            left: 90%;
+            animation-delay: 4s;
+        }
+
+        .calculator {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #77a8b1;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        input, button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 90%;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #7a1b54;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            height: 50px;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #6f9d68;
+        }
+
+        p {
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        h1, h2 {
+            font-weight: 700;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="background-music" loop>
+        <source src="./mp3.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Music Toggle Switch -->
+    <div class="music-toggle">
+        <input type="checkbox" id="music-toggle" onchange="toggleMusic()">
+        <label for="music-toggle" class="music-toggle-label"></label>
+        <span>Music</span>
+    </div>
+
+    <div class="container">
+        <h1 class="title">Calculator Suite</h1>
+        
+        <!-- Age Calculator -->
+        <div class="calculator fade-in" id="age-calculator">
+            <h2>Age Calculator</h2>
+            <input type="date" id="birthdate" placeholder="Enter your birth date">
+            <button onclick="calculateAge()">Calculate Age</button>
+            <p id="age-result">Your age will appear here.</p>
+        </div>
+        
+        <!-- BMI Calculator -->
+        <div class="calculator fade-in" id="bmi-calculator">
+            <h2>BMI Calculator</h2>
+            <input type="number" id="weight" placeholder="Weight (kg)">
+            <input type="number" id="height" placeholder="Height (m)">
+            <button onclick="calculateBMI()">Calculate BMI</button>
+            <p id="bmi-result">Your BMI will appear here.</p>
+        </div>
+        
+        <!-- Loan Interest Calculator -->
+        <div class="calculator fade-in" id="loan-calculator">
+            <h2>Loan Interest Calculator</h2>
+            <input type="number" id="principal" placeholder="Principal Amount">
+            <input type="number" id="rate" placeholder="Interest Rate (%)">
+            <input type="number" id="time" placeholder="Time (years)">
+            <button onclick="calculateLoanInterest()">Calculate Interest</button>
+            <p id="loan-result">The interest will appear here.</p>
+        </div>
+        
+        <!-- Date Difference Calculator -->
+        <div class="calculator fade-in" id="date-difference-calculator">
+            <h2>Date Difference Calculator</h2>
+            <input type="date" id="start-date" placeholder="Start Date">
+            <input type="date" id="end-date" placeholder="End Date">
+            <button onclick="calculateDateDifference()">Calculate Difference</button>
+            <p id="date-difference-result">The date difference will appear here.</p>
+        </div>
+
+        <!-- GST Calculator -->
+        <div class="calculator fade-in" id="gst-calculator">
+            <h2>GST Calculator</h2>
+            <input type="number" id="original-price" placeholder="Original Price">
+            <input type="number" id="gst-percentage" placeholder="GST Percentage (%)">
+            <button onclick="calculateGST()">Calculate GST</button>
+            <p id="gst-result">The final price including GST will appear here.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 Joel Pallapothu. All rights reserved.
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script>
+        // Age Calculator
+        function calculateAge() {
+            const birthdate = document.getElementById('birthdate').value;
+            if (!birthdate) {
+                document.getElementById('age-result').textContent = "Please enter your birth date.";
+                return;
+            }
+            const birthDateObj = new Date(birthdate);
+            const today = new Date();
+            let age = today.getFullYear() - birthDateObj.getFullYear();
+            const monthDiff = today.getMonth() - birthDateObj.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+                age--;
+            }
+            document.getElementById('age-result').textContent = `Your age is ${age} years.`;
+        }
+
+        // BMI Calculator
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            if (!weight || !height) {
+                document.getElementById('bmi-result').textContent = "Please enter valid weight and height.";
+                return;
+            }
+            const bmi = (weight / (height * height)).toFixed(2);
+            document.getElementById('bmi-result').textContent = `Your BMI is ${bmi}.`;
+        }
+
+        // Loan Interest Calculator
+        function calculateLoanInterest() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value);
+            const time = parseFloat(document.getElementById('time').value);
+            if (!principal || !rate || !time) {
+                document.getElementById('loan-result').textContent = "Please enter valid values.";
+                return;
+            }
+            const interest = (principal * rate * time) / 100;
+            document.getElementById('loan-result').textContent = `The interest is ${interest.toFixed(2)}.`;
+        }
+
+        // Date Difference Calculator
+        function calculateDateDifference() {
+            const startDate = new Date(document.getElementById('start-date').value);
+            const endDate = new Date(document.getElementById('end-date').value);
+            if (!startDate || !endDate || startDate > endDate) {
+                document.getElementById('date-difference-result').textContent = "Please enter valid dates.";
+                return;
+            }
+            const differenceInTime = endDate - startDate;
+            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+            document.getElementById('date-difference-result').textContent = `The difference is ${differenceInDays} days.`;
+        }
+
+        // GST Calculator
+        function calculateGST() {
+            const originalPrice = parseFloat(document.getElementById('original-price').value);
+            const gstPercentage = parseFloat(document.getElementById('gst-percentage').value);
+            if (!originalPrice || !gstPercentage) {
+                document.getElementById('gst-result').textContent = "Please enter valid values.";
+                return;
+            }
+            const gstAmount = (originalPrice * gstPercentage) / 100;
+            const finalPrice = originalPrice + gstAmount;
+            document.getElementById('gst-result').textContent = `The final price including GST is ${finalPrice.toFixed(2)}.`;
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('background-music');
+            const musicToggle = document.getElementById('music-toggle');
+            if (musicToggle.checked) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+    </script>
+</body>
+</html>
